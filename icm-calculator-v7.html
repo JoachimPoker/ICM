@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker Prize Calculator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+.table-container {
+    width: 100%;
+    overflow-x: hidden; /* Remove horizontal scrolling */
+}
+
+table {
+    width: 100%; /* Ensure tables take full width */
+    table-layout: fixed; /* Prevent columns from expanding too much */
+    word-wrap: break-word; /* Ensure text wraps properly */
+}
+
+th, td {
+    padding: 8px; /* Add spacing for readability */
+    font-size: 14px; /* Ensure text fits well */
+    text-align: center;
+    white-space: nowrap; /* Prevent text from breaking into multiple lines */
+}
+
+@media (max-width: 768px) {
+    th, td {
+        font-size: 12px; /* Make font smaller on mobile */
+        padding: 6px;
+    }
+}
+
+        }
+        @media (max-width: 768px) {
+            .table-container {
+                width: 100%;
+                overflow-x: scroll;
+            }
+            table {
+                min-width: 900px;
+            }
+        }
+		
+		.d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.me-2 {
+    margin-right: 10px; /* Adds spacing between label and slider */
+}
+
+.w-50 {
+    width: 50%; /* Makes the slider take up only half the width */
+}
+/* Style the slider box */
+.slider-box {
+    background-color: #f0f0f0; /* Light gray background */
+    border: 2px solid #ccc; /* Subtle border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 5px 10px; /* Adds spacing around the slider */
+}
+
+/* Style the slider itself */
+#icmChipChopSlider {
+    width: 150px; /* Set a fixed width */
+    display: block; /* Ensures proper spacing */
+}
+
+/* Ensure the label and slider stay on the same line */
+.slider-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px; /* Adds space between text and slider */
+    flex-wrap: nowrap; /* Prevents text from wrapping */
+}
+
+/* Ensure text scales dynamically */
+.slider-wrapper label {
+    font-size: clamp(12px, 2vw, 16px); /* Responsive text scaling */
+    white-space: nowrap; /* Prevents line breaks */
+}
+
+/* Style the slider box */
+.slider-box {
+    background-color: #f0f0f0; /* Light gray background */
+    border: 2px solid #ccc; /* Subtle border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 5px 10px; /* Adds spacing */
+}
+
+/* Ensure slider fits well */
+#icmChipChopSlider {
+    width: 150px; /* Set a fixed width */
+    display: block;
+}
+/* Make the calculate button full width */
+.btn-primary {
+    width: 100%;
+    font-size: 18px;
+    padding: 12px;
+}
+
+/* Ensure slider and label are properly aligned */
+.slider-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Adds spacing between text and slider */
+    width: 100%;
+}
+
+/* Style the slider box */
+.slider-box {
+    background-color: #f0f0f0; /* Light gray background */
+    border: 2px solid #ccc; /* Subtle border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 5px 10px; /* Adds spacing around the slider */
+    width: 100%; /* Make sure the slider container fills the space */
+}
+
+/* Ensure slider takes full width */
+#icmChipChopSlider {
+    width: 100%;
+}
+/* Make the Position column smaller - ONLY for the Player Input Table */
+#playerTable th:nth-child(3), 
+#playerTable td:nth-child(3) {
+    width: 50px; /* Reduce width */
+    text-align: center; /* Center the text */
+    white-space: nowrap; /* Prevents wrapping */
+}
+
+}
+
+/* Adjust table inputs to fit better */
+.table input {
+    font-size: 14px;
+    padding: 5px;
+}
+
+/* Ensure the table remains responsive */
+.table-container {
+    max-width: 100%;
+    overflow-x: auto;
+}
+/* Ensure results tables are full width */
+.results-container {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Ensure tables do not shrink */
+.results-container .table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* Ensure columns distribute evenly */
+.results-container th,
+.results-container td {
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Prevent text from breaking into multiple lines */
+.results-container th,
+.results-container td {
+    padding: 10px;
+    word-wrap: break-word;
+}
+
+/* Keep headers bold and readable */
+.results-container th {
+    font-weight: bold;
+}
+/* Ensure results tables ignore forced column width */
+.results-container th,
+.results-container td {
+    width: auto !important; /* Allow columns to expand */
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Poker Prize Calculator</h2>
+       <div class="mb-3">
+    <button class="btn btn-primary w-100" onclick="calculateAll()">Calculate</button>
+</div>
+
+<!-- Settings Button -->
+<button class="btn btn-secondary w-100 mb-3" onclick="toggleSettings()">Settings</button>
+
+<!-- Hidden Settings Section -->
+<div id="settingsContainer" style="display: none;">
+    <div class="mb-3">
+        <select id="roundingSelect" class="form-select">
+            <option value="0">No Rounding</option>
+            <option value="1">Round to 1</option>
+            <option value="5">Round to 5</option>
+            <option value="10">Round to 10</option>
+            <option value="25">Round to 25</option>
+        </select>
+    </div>
+
+
+<div class="mb-3 d-flex align-items-center justify-content-between slider-wrapper">
+    <label for="icmChipChopSlider" class="form-label text-nowrap">
+        <span id="sliderValue">50</span>% ICM / <span id="chipChopValue">50</span>% Chip-Chop
+    </label>
+    <div class="slider-box flex-grow-1">
+        <input type="range" id="icmChipChopSlider" class="form-range w-100" min="0" max="100" value="50" step="1"
+            oninput="updateSliderLabel()">
+    </div>
+</div>
+
+
+
+</div>
+
+
+        
+        <div class="table-container">
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Stack</th>
+                        <th>Pos.</th>
+                        <th>Payout (£)</th>
+                    </tr>
+                </thead>
+                <tbody id="playerTable">
+                    <script>
+                        for (let i = 1; i <= 9; i++) {
+                            document.write(`
+                                <tr>
+                                    <td><input type="text" class="form-control" placeholder="Player ${i}"></td>
+                                    <td><input type="number" class="form-control stack" min="0"></td>
+                                    <td>${i}</td>
+                                    <td><input type="number" class="form-control payout" min="0"></td>
+                                </tr>
+                            `);
+                        }
+                    </script>
+                </tbody>
+             <tfoot class="table-dark">
+    <tr>
+        <td><strong>Total:</strong></td>
+        <td id="totalStack">0</td>
+        <td></td>
+        <td id="totalPayout">0</td>
+    </tr>
+    <tr>
+        <td colspan="2"><strong>Money Left to Play For:</strong></td>
+        <td colspan="2">
+            <input type="number" id="moneyLeft" class="form-control" min="0" value="0">
+        </td>
+    </tr>
+</tfoot>
+
+            </table>
+        </div>
+        </div> <!-- End of Data Table Container -->
+
+        <!-- Results Table Will Appear Here -->
+        <div id="resultsContainer"></div>
+
+     <!-- ICM Distribution Table (Hidden by Default) -->
+<div id="icmDistributionSection" style="display: none;">
+    <h3 class="text-center mt-5">ICM Distribution Table</h3>
+    <div class="table-container">
+        <table class="table table-bordered text-center">
+            <thead class="table-dark" id="icmHeader"></thead>
+            <tbody id="icmTable"></tbody>
+        </table>
+    </div>
+</div>
+
+
+    </div>
+
+<script>
+
+let latestICMPrizes = [];
+let latestChipChopPrizes = [];
+let latestMixedPrizes = [];
+
+
+document.querySelectorAll('.stack, .payout').forEach(input => {
+    input.addEventListener('input', calculateTotals);
+});
+
+function toggleSettings() {
+    let settingsDiv = document.getElementById("settingsContainer");
+    if (settingsDiv.style.display === "none") {
+        settingsDiv.style.display = "block"; // Show settings
+    } else {
+        settingsDiv.style.display = "none"; // Hide settings
+    }
+}
+
+function updateSliderLabel() {
+    let sliderValue = document.getElementById('icmChipChopSlider').value;
+    document.getElementById('sliderValue').innerText = sliderValue;
+    document.getElementById('chipChopValue').innerText = 100 - sliderValue;
+}
+
+ function calculateTotals() {
+    let stacks = document.querySelectorAll('.stack');
+    let payouts = document.querySelectorAll('.payout');
+    let totalStack = 0;
+    let totalPayout = 0;
+
+    // Calculate total chip stacks
+    stacks.forEach(stack => {
+        let value = parseFloat(stack.value.replace(/,/g, '')); // Remove commas before parsing
+        if (!isNaN(value) && value > 0) {
+            totalStack += value;
+        }
+    });
+
+    // Calculate total payouts
+    payouts.forEach(payout => {
+        let value = parseFloat(payout.value.replace(/,/g, '')); // Remove commas before parsing
+        if (!isNaN(value) && value > 0) {
+            totalPayout += value;
+        }
+    });
+
+    // Update totals with proper formatting
+    document.getElementById('totalStack').innerText = totalStack.toLocaleString();
+    document.getElementById('totalPayout').innerText = `£${totalPayout.toLocaleString()}`;
+}
+
+
+    function permuteArray(arr) {
+        function permute(arr, temp = []) {
+            if (!arr.length) {
+                result.push([...temp]);
+            } else {
+                for (let i = 0; i < arr.length; i++) {
+                    permute([...arr.slice(0, i), ...arr.slice(i + 1)], [...temp, arr[i]]);
+                }
+            }
+        }
+        let result = [];
+        permute(arr);
+        return result;
+    }
+
+ function calculateICMDistribution() {
+    let stacks = document.querySelectorAll('.stack');
+    let names = document.querySelectorAll('#playerTable input[type="text"]');
+    let stackValues = [];
+    let playerNames = [];
+
+    stacks.forEach((stack, index) => {
+        let value = parseFloat(stack.value);
+        if (!isNaN(value) && value > 0) {
+            stackValues.push(value);
+            playerNames.push(names[index].value || `Player ${index + 1}`);
+        }
+    });
+
+    if (stackValues.length === 0) {
+        alert("Please enter at least one stack value.");
+        return [];
+    }
+
+    let numPlayers = stackValues.length;
+    let finishDist = Array.from({ length: numPlayers }, () => Array(numPlayers).fill(0));
+    let permutations = permuteArray([...Array(numPlayers).keys()]);
+
+    permutations.forEach(perm => {
+        let prob = 1;
+
+        for (let i = 0; i < numPlayers; i++) {
+            let playerIndex = perm[i];
+            let playerStack = stackValues[playerIndex];
+
+            let totalStack = stackValues.reduce((sum, val, idx) => sum + (perm.indexOf(idx) >= i ? val : 0), 0);
+            if (totalStack > 0) {
+                prob *= playerStack / totalStack;
+            }
+        }
+
+        for (let i = 0; i < numPlayers; i++) {
+            finishDist[perm[i]][i] += prob;
+        }
+    });
+
+    displayICMTable(finishDist, playerNames);
+    return finishDist; // ✅ Return finishDist for use in calculateAll()
+}
+
+	
+function applyRounding(prizes) {
+    let roundValue = parseInt(document.getElementById('roundingSelect').value);
+    if (roundValue === 0) return prizes.map(val => parseFloat(val.toFixed(2))); // No rounding
+
+    let roundedPrizes = prizes.map(val => Math.round(val / roundValue) * roundValue);
+    let totalAdjustment = prizes.reduce((sum, val, i) => sum + (roundedPrizes[i] - val), 0);
+
+    // Find the element that can best absorb the rounding difference
+    let closestIndex = 0;
+    let minDifference = Math.abs(totalAdjustment);
+    for (let i = 0; i < prizes.length; i++) {
+        let diff = Math.abs(roundedPrizes[i] - totalAdjustment - prizes[i]);
+        if (diff < minDifference) {
+            minDifference = diff;
+            closestIndex = i;
+        }
+    }
+
+    // Adjust the closest element
+    roundedPrizes[closestIndex] -= totalAdjustment;
+
+    return roundedPrizes.map(Number); // Ensure it returns **numbers** instead of strings
+}
+
+
+    function calculateICMPrizes(finishDist) {
+    let payouts = document.querySelectorAll('.payout');
+    let icmResults = document.querySelectorAll('.icm-result');
+    let moneyLeft = parseFloat(document.getElementById('moneyLeft').value) || 0;
+
+    let numPlayers = finishDist.length;
+    let icmPrizes = Array(numPlayers).fill(0);
+
+    for (let i = 0; i < numPlayers; i++) {
+        for (let j = 0; j < numPlayers; j++) {
+            let payoutValue = parseFloat(payouts[j].value) || 0;
+            icmPrizes[i] += finishDist[i][j] * (payoutValue - (j === 0 ? moneyLeft : 0));
+        }
+    }
+
+    let roundedPrizes = applyRounding(icmPrizes);
+
+    icmResults.forEach((cell, index) => {
+        cell.innerText = `£${roundedPrizes[index]}`;
+    });
+
+    return roundedPrizes.map(Number); // Return as numbers for further calculations
+}
+
+
+	
+function calculateChopPrizes() {
+    let stacks = document.querySelectorAll('.stack');
+    let payouts = document.querySelectorAll('.payout');
+    let chopResults = document.querySelectorAll('.chip-chop'); // Ensure selection
+    let moneyLeft = parseFloat(document.getElementById('moneyLeft').value) || 0;
+
+    let stackValues = [];
+    let payoutValues = [];
+
+    stacks.forEach((stack, index) => {
+        let stackValue = parseFloat(stack.value);
+        let payoutValue = parseFloat(payouts[index].value) || 0;
+
+        if (!isNaN(stackValue) && stackValue > 0) {
+            stackValues.push(stackValue);
+            payoutValues.push(payoutValue);
+        }
+    });
+
+    let numPlayers = stackValues.length;
+
+    if (numPlayers === 0) {
+        console.warn("No players entered for Chop Prizes.");
+        return Array(numPlayers).fill(0); // Return empty array if no players
+    }
+
+    let totalStacks = stackValues.reduce((sum, val) => sum + val, 0);
+    let b = payoutValues.length >= numPlayers ? payoutValues[numPlayers - 1] : 0;
+    let c = payoutValues.slice(0, numPlayers).reduce((sum, val) => sum + (val - b), 0) - moneyLeft;
+
+    let chopPrizes = stackValues.map(stack => ((stack / totalStacks) * c) + b);
+
+    let roundedPrizes = applyRounding(chopPrizes);
+
+    // **Ensure Chop Prizes update in the table**
+    chopResults.forEach((cell, index) => {
+        if (index < roundedPrizes.length) {
+            cell.innerText = `£${roundedPrizes[index]}`;
+        } else {
+            cell.innerText = '-';
+        }
+    });
+
+    console.log("Chop Prizes Calculated:", roundedPrizes); // Debugging
+    return roundedPrizes.map(Number); // Return for further calculations
+}
+
+function calculateMixedPrizes(icmPrizes, chopPrizes) {
+    let mixResults = document.querySelectorAll('.mixed-prizes');
+    let mixPercentage = parseInt(document.getElementById('icmChipChopSlider').value) / 100;
+
+    if (icmPrizes.length === 0 || chopPrizes.length === 0) {
+        console.error("ICM or Chip Chop Prizes are missing.");
+        return;
+    }
+
+    let mixedPrizes = icmPrizes.map((icm, i) => (icm * mixPercentage) + (chopPrizes[i] * (1 - mixPercentage)));
+
+    let roundedPrizes = applyRounding(mixedPrizes);
+
+    mixResults.forEach((cell, index) => {
+        if (index < roundedPrizes.length) {
+            cell.innerText = `£${roundedPrizes[index]}`;
+        } else {
+            cell.innerText = '-';
+        }
+    });
+
+    console.log("Mixed Prizes Calculated:", roundedPrizes); // Debugging
+}
+document.getElementById('icmChipChopSlider').addEventListener('input', function () {
+    updateSliderLabel();
+
+    // Get all ICM and Chip Chop results from the table
+    let icmPrizes = document.querySelectorAll('.icm-result');
+    let chopPrizes = document.querySelectorAll('.chip-chop');
+
+    // Convert displayed text back to numbers (removing "£" sign)
+    let icmValues = Array.from(icmPrizes).map(cell => parseFloat(cell.innerText.replace('£', '')) || 0);
+    let chopValues = Array.from(chopPrizes).map(cell => parseFloat(cell.innerText.replace('£', '')) || 0);
+
+    calculateMixedPrizes(icmValues, chopValues); // ✅ Update Mixed Prizes based on new slider value
+});
+
+
+function displayICMTable(finishDist, playerNames) {
+    let icmSection = document.getElementById("icmDistributionSection"); 
+    let icmHeader = document.getElementById('icmHeader');
+    let icmTable = document.getElementById('icmTable');
+
+    // If data exists, show the table
+    if (finishDist.length > 0) {
+        icmSection.style.display = "block"; // ✅ Show ICM section when data is available
+    } else {
+        icmSection.style.display = "none";  // ✅ Hide ICM section if no data
+    }
+
+    icmHeader.innerHTML = '<tr><th>Player</th>' + playerNames.map((_, i) => `<th>${i + 1}</th>`).join('') + '</tr>';
+    icmTable.innerHTML = playerNames.map((player, i) => 
+        `<tr><td>${player}</td>` + finishDist[i].map(prob => `<td>${(prob * 100).toFixed(2)}%</td>`).join('') + '</tr>'
+    ).join('');
+}
+
+
+function calculateAll() {
+    calculateTotals();
+    let finishDist = calculateICMDistribution(); // ✅ Store finishDist
+
+    latestICMPrizes = calculateICMPrizes(finishDist); // ✅ Store ICM Prizes
+    latestChipChopPrizes = calculateChopPrizes(); // ✅ Store Chip Chop Prizes
+    latestMixedPrizes = latestICMPrizes.map((icm, i) =>
+        (icm * (document.getElementById('icmChipChopSlider').value / 100)) +
+        (latestChipChopPrizes[i] * (1 - (document.getElementById('icmChipChopSlider').value / 100)))
+    );
+
+    generateResultsTable(latestICMPrizes, latestChipChopPrizes, latestMixedPrizes);
+}
+
+
+function generateResultsTable(icmPrizes, chopPrizes, mixedPrizes) {
+    let resultsContainer = document.getElementById("resultsContainer");
+    let playerNames = document.querySelectorAll('#playerTable input[type="text"]');
+
+    let totalICM = 0, totalChipChop = 0, totalMixed = 0;
+
+    let resultsHTML = `
+        <h3 class="text-center mt-5">Prize Calculation Results</h3>
+        <div class="table-container">
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Player</th>
+                        <th>ICM Result (£)</th>
+                        <th>Chip Chop (£)</th>
+                        <th>Mixed Prizes (£)</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    for (let i = 0; i < icmPrizes.length; i++) {
+        let playerName = playerNames[i].value || `Player ${i + 1}`;
+        totalICM += parseFloat(icmPrizes[i]);
+        totalChipChop += parseFloat(chopPrizes[i]);
+        totalMixed += parseFloat(mixedPrizes[i]);
+
+        resultsHTML += `
+            <tr>
+                <td>${playerName}</td>
+                <td class="icm-result">£${icmPrizes[i].toFixed(2)}</td>
+                <td class="chip-chop">£${chopPrizes[i].toFixed(2)}</td>
+                <td class="mixed-prizes">£${mixedPrizes[i].toFixed(2)}</td>
+            </tr>
+        `;
+    }
+
+    // **Totals Row**
+    resultsHTML += `
+        <tfoot>
+            <tr class="table-dark">
+                <td><strong>Total:</strong></td>
+                <td id="totalICM">£${totalICM.toFixed(2)}</td>
+                <td id="totalChipChop">£${totalChipChop.toFixed(2)}</td>
+                <td id="totalMixed">£${totalMixed.toFixed(2)}</td>
+            </tr>
+        </tfoot>
+    `;
+
+    resultsHTML += `
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Share Button -->
+    <div class="text-center mt-3">
+        <button class="btn btn-success" onclick="shareResults()">Share Results</button>
+        <input type="text" id="shareableLink" class="form-control mt-2" readonly style="display: none;">
+    </div>
+    `;
+
+    resultsContainer.innerHTML = resultsHTML; // ✅ Fully re-renders table with updated values
+}
+
+
+
+
+
+
+// Function to apply rounding dynamically to existing results
+
+function applyRoundingToResults() {
+    let roundValue = parseInt(document.getElementById('roundingSelect').value);
+
+    // If no calculations exist yet, exit
+    if (!latestICMPrizes.length || !latestChipChopPrizes.length || !latestMixedPrizes.length) {
+        return;
+    }
+
+    // Apply rounding to stored computed values
+    latestICMPrizes = applyRounding([...latestICMPrizes]).map(Number);
+    latestChipChopPrizes = applyRounding([...latestChipChopPrizes]).map(Number);
+    latestMixedPrizes = applyRounding([...latestMixedPrizes]).map(Number);
+
+    // **Re-render the results table with updated values**
+    generateResultsTable(latestICMPrizes, latestChipChopPrizes, latestMixedPrizes);
+}
+
+
+
+
+// Function to update the totals in the results table
+function updateResultsTotals(icmPrizes, chipChopPrizes, mixedPrizes) {
+    let moneyLeft = parseFloat(document.getElementById('moneyLeft').value) || 0;
+
+    let totalICM = icmPrizes.reduce((sum, val) => sum + parseFloat(val), 0) + moneyLeft;
+    let totalChipChop = chipChopPrizes.reduce((sum, val) => sum + parseFloat(val), 0) + moneyLeft;
+    let totalMixed = mixedPrizes.reduce((sum, val) => sum + parseFloat(val), 0) + moneyLeft;
+
+    // Update displayed totals
+    document.getElementById('totalICM').innerText = `£${totalICM.toFixed(2)}`;
+    document.getElementById('totalChipChop').innerText = `£${totalChipChop.toFixed(2)}`;
+    document.getElementById('totalMixed').innerText = `£${totalMixed.toFixed(2)}`;
+
+    // Update the Money Left row
+    document.getElementById('moneyLeftRow').innerText = `£${moneyLeft.toFixed(2)}`;
+}
+
+document.getElementById('roundingSelect').addEventListener('change', applyRoundingToResults);
+
+function shareResults() {
+    let players = [];
+    let stacks = [];
+    let payouts = [];
+    
+    document.querySelectorAll('#playerTable input[type="text"]').forEach(input => players.push(encodeURIComponent(input.value)));
+    document.querySelectorAll('.stack').forEach(input => stacks.push(input.value));
+    document.querySelectorAll('.payout').forEach(input => payouts.push(input.value));
+
+    let moneyLeft = document.getElementById('moneyLeft').value || 0;
+    let rounding = document.getElementById('roundingSelect').value;
+    let icmPercentage = document.getElementById('icmChipChopSlider').value;
+
+    let queryParams = new URLSearchParams();
+    queryParams.set("players", players.join(","));
+    queryParams.set("stacks", stacks.join(","));
+    queryParams.set("payouts", payouts.join(","));
+    queryParams.set("moneyLeft", moneyLeft);
+    queryParams.set("rounding", rounding);
+    queryParams.set("icm", icmPercentage);
+
+    let shareableURL = window.location.origin + window.location.pathname + "?" + queryParams.toString();
+
+    // Display the link in an input field
+    let shareInput = document.getElementById('shareableLink');
+    shareInput.value = shareableURL;
+    shareInput.style.display = "block";
+    shareInput.select();
+    document.execCommand("copy");
+
+    alert("Link copied to clipboard!");
+}
+function loadSharedData() {
+    let params = new URLSearchParams(window.location.search);
+
+    if (params.has("players")) {
+        let players = params.get("players").split(",");
+        let stacks = params.get("stacks").split(",");
+        let payouts = params.get("payouts").split(",");
+        let moneyLeft = params.get("moneyLeft") || 0;
+        let rounding = params.get("rounding") || 0;
+        let icmPercentage = params.get("icm") || 50;
+
+        document.querySelectorAll('#playerTable input[type="text"]').forEach((input, i) => input.value = decodeURIComponent(players[i] || ""));
+        document.querySelectorAll('.stack').forEach((input, i) => input.value = stacks[i] || 0);
+        document.querySelectorAll('.payout').forEach((input, i) => input.value = payouts[i] || 0);
+        
+        document.getElementById('moneyLeft').value = moneyLeft;
+        document.getElementById('roundingSelect').value = rounding;
+        document.getElementById('icmChipChopSlider').value = icmPercentage;
+        updateSliderLabel();
+
+        calculateAll(); // Auto-run calculations when loaded from a shared link
+    }
+}
+
+// Run this when the page loads
+window.onload = loadSharedData;
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
