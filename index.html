@@ -636,19 +636,18 @@ function generateResultsTable(icmPrizes, chopPrizes, mixedPrizes) {
         </tfoot>
     `;
 
-    resultsHTML += `</tbody></table></div>`;
-}
+   resultsHTML += `</tbody></table></div>`; // ✅ Properly closed string
 
-    <!-- Share Button -->
+// Share Button
+resultsHTML += `
     <div class="text-center mt-3">
         <button class="btn btn-success" onclick="shareResults()">Share Results</button>
         <input type="text" id="shareableLink" class="form-control mt-2" readonly style="display: none;">
     </div>
-    `;
+`;
 
-    resultsContainer.innerHTML = resultsHTML; // ✅ Fully re-renders table with updated values
+    resultsContainer.innerHTML = resultsHTML; // ✅ Now updates results with Money Left row
 }
-
 
 
 
@@ -728,6 +727,7 @@ function shareResults() {
 
     alert("Link copied to clipboard!");
 }
+
 function loadSharedData() {
     let params = new URLSearchParams(window.location.search);
 
@@ -754,6 +754,7 @@ function loadSharedData() {
 
 // Run this when the page loads
 window.onload = loadSharedData;
+
 
 
 
