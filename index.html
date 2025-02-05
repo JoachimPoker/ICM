@@ -576,6 +576,7 @@ function calculateAll() {
 function generateResultsTable(icmPrizes, chopPrizes, mixedPrizes) {
     let resultsContainer = document.getElementById("resultsContainer");
     let playerNames = document.querySelectorAll('#playerTable input[type="text"]');
+    let moneyLeft = parseFloat(document.getElementById('moneyLeft').value) || 0;
 
     let totalICM = 0, totalChipChop = 0, totalMixed = 0;
 
@@ -594,6 +595,7 @@ function generateResultsTable(icmPrizes, chopPrizes, mixedPrizes) {
                 <tbody>
     `;
 
+    // Loop through players and add rows
     for (let i = 0; i < icmPrizes.length; i++) {
         let playerName = playerNames[i].value || `Player ${i + 1}`;
         totalICM += parseFloat(icmPrizes[i]);
@@ -610,7 +612,19 @@ function generateResultsTable(icmPrizes, chopPrizes, mixedPrizes) {
         `;
     }
 
-    // **Totals Row**
+    // **Add the Money Left row**
+    resultsHTML += `
+        <tr class="table-warning">
+            <td><strong>Money Left to Be Played For:</strong></td>
+            <td colspan="3" id="moneyLeftRow">£${moneyLeft.toFixed(2)}</td>
+        </tr>
+    `;
+
+    // **Modify the totals row to include Money Left**
+    totalICM += moneyLeft;
+    totalChipChop += moneyLeft;
+    totalMixed += moneyLeft;
+
     resultsHTML += `
         <tfoot>
             <tr class="table-dark">
@@ -622,10 +636,8 @@ function generateResultsTable(icmPrizes, chopPrizes, mixedPrizes) {
         </tfoot>
     `;
 
-    resultsHTML += `
-            </tbody>
-        </table>
-    </div>
+    resultsHTML += `</tbody></table></div>`;
+}
 
     <!-- Share Button -->
     <div class="text-center mt-3">
@@ -680,6 +692,7 @@ function updateResultsTotals(icmPrizes, chipChopPrizes, mixedPrizes) {
     // Update the Money Left row
     document.getElementById('moneyLeftRow').innerText = `£${moneyLeft.toFixed(2)}`;
 }
+
 
 document.getElementById('roundingSelect').addEventListener('change', applyRoundingToResults);
 
