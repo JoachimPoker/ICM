@@ -1,0 +1,263 @@
+/* General Styling */
+body {
+    background-color: #1c173d !important; /* Dark Background */
+    padding: 20px;
+    color: white !important;
+}
+
+thead th,tr {
+	background-color:#272341 !important;
+	border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+	border-left:none !important;
+	border-right:none !important;
+	border-top:none !important;
+	text-transform:uppercase;
+	color:white !important;
+	vertical-align:center;
+}
+
+tfoot td,tr {
+	background-color:#272341 !important;
+	border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+	border-left:none !important;
+	border-right:none !important;
+	border-top:none !important;
+	text-transform:uppercase;
+	color:white !important;
+	vertical-align:center;
+}
+
+tbody td, tr {
+	background-color:#312c52 !important;
+	border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+	border-left:none !important;
+	border-right:none !important;
+	border-top:none !important;
+	text-transform:uppercase;
+	color:white !important;
+	vertical-align:center;
+}
+
+/* Responsive fixes for mobile */
+@media (max-width: 768px) {
+    th, td {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    /* Allow table to scroll horizontally if needed */
+    .table-container {
+        overflow-x: auto;
+    }
+}
+
+/* Highlight the "Money Left" row */
+.table-warning {
+    background-color: #fff3cd; !important /* Light yellow */
+    font-weight: bold;
+}
+
+
+
+
+
+/* Align Calculate and Settings buttons */
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Ensure Bootstrap styles are overridden */
+.btn {
+    box-shadow: none !important; /* Remove Bootstrap button shadow */
+    border-radius: 5px !important; /* Keep a consistent border radius */
+}
+
+/* Calculate Button */
+.btn-primary {
+    background-color: #00cd70 !important; /* Green */
+    color: #1c173d !important; /* Dark Blue */
+    border: 2px solid #00cd70 !important; /* Ensure border is same color */
+    font-size: 18px !important;
+    padding: 12px !important;
+    font-weight: bold !important;
+    width: 100% !important;
+    text-transform: uppercase !important;
+    transition: background-color 0.3s ease, color 0.3s ease !important;
+}
+
+.btn-success {
+	 background-color: #00cd70 !important; /* Green */
+color: #1c173d !important; /* Dark Blue */}
+
+/* Calculate Button Hover */
+.btn-primary:hover {
+    background-color: #00b862 !important; /* Slightly darker green */
+    color: #1c173d !important;
+    border-color: #00b862 !important;
+}
+
+/* Settings Button (Gear Icon) */
+.btn-secondary {
+    background-color: transparent !important;
+    color: #00cd70 !important; /* Green text */
+    border: 2px solid #00cd70 !important; /* Green border */
+    font-size: 18px !important;
+    padding: 12px !important;
+    font-weight: bold !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 50px !important; /* Make it square */
+    height: 50px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Hover effect for Settings Button */
+.btn-secondary:hover {
+    background-color: #00cd70 !important;
+    color: #ffffff !important; /* White text on hover */
+}
+
+/* Ensure Settings Button Icon Matches Text Color */
+.btn-secondary i {
+    color: #00cd70 !important; /* Green by default */
+    font-size: 24px !important;
+    transition: color 0.3s ease !important;
+}
+
+.btn-secondary:hover i {
+    color: #ffffff !important; /* White icon on hover */
+}
+
+
+/* Settings Container Styling */
+#settingsContainer {
+    display: none;
+    width: 100%;
+    margin-top: 10px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Settings Title */
+#settingsContainer h4 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Dropdown Styling */
+#roundingSelect {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+/* Checkbox Section */
+.settings-options {
+    display: flex;
+    flex-direction: column; /* Stack checkboxes vertically */
+    gap: 5px;
+    margin-top: 10px;
+}
+
+/* Checkbox Label Styling */
+.settings-options label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+/* Slider Box */
+#sliderContainer {
+    background-color: #f0f0f0; /* Light gray */
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Slider Bar */
+#icmChipChopSlider {
+    width: 100%;
+}
+
+/* Responsive Text for Slider */
+#sliderContainer label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+
+
+/* Ensure results tables are full width */
+.results-container {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Ensure tables do not shrink */
+.results-container .table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* Ensure columns distribute evenly */
+.results-container th,
+.results-container td {
+    text-align: center;
+    white-space: nowrap;
+    padding: 10px;
+    word-wrap: break-word;
+}
+
+/* Keep headers bold and readable */
+.results-container th {
+    font-weight: bold;
+}
+
+/* Ensure results tables ignore forced column width */
+.results-container th,
+.results-container td {
+    width: auto !important; /* Allow columns to expand */
+}
+
+/* Make the Position column smaller - ONLY for the Player Input Table */
+#playerTable th:nth-child(3), 
+#playerTable td:nth-child(3) {
+    width: 50px; /* Reduce width */
+    text-align: center; /* Center the text */
+    white-space: nowrap; /* Prevents wrapping */
+}
+
+/* Share Button Styling */
+.share-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#shareableLink {
+    display: none;
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Totals row styling */
+.table-dark tfoot td {
+    font-weight: bold;
+}
+
+.d-none {
+    display: none !important;
+}
