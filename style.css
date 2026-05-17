@@ -1,68 +1,87 @@
-/* General Styling */
+/* ========================================================================
+   Base
+   ======================================================================== */
 body {
-    background-color: #1c173d !important; /* Dark Background */
+    background-color: #1c173d !important;
     padding: 20px;
     color: white !important;
 }
 
-thead th,tr {
-	background-color:#272341 !important;
-	border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-	border-left:none !important;
-	border-right:none !important;
-	border-top:none !important;
-	text-transform:uppercase;
-	color:white !important;
-	vertical-align:center;
+@media (max-width: 576px) {
+    body { padding: 12px; }
 }
 
-tfoot td,tr {
-	background-color:#272341 !important;
-	border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-	border-left:none !important;
-	border-right:none !important;
-	border-top:none !important;
-	text-transform:uppercase;
-	color:white !important;
-	vertical-align:center;
+/* ========================================================================
+   Tables
+   ======================================================================== */
+thead th, tr {
+    background-color: #272341 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    text-transform: uppercase;
+    color: white !important;
+    vertical-align: middle;
+}
+
+tfoot td, tr {
+    background-color: #272341 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    text-transform: uppercase;
+    color: white !important;
+    vertical-align: middle;
 }
 
 tbody td, tr {
-	background-color:#312c52 !important;
-	border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-	border-left:none !important;
-	border-right:none !important;
-	border-top:none !important;
-	text-transform:uppercase;
-	color:white !important;
-	vertical-align:center;
+    background-color: #312c52 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    text-transform: uppercase;
+    color: white !important;
+    vertical-align: middle;
 }
 
-/* Responsive fixes for mobile */
-@media (max-width: 768px) {
-    th, td {
-        font-size: 12px;
-        padding: 6px;
-    }
-
-    /* Allow table to scroll horizontally if needed */
-    .table-container {
-        overflow-x: auto;
-    }
+/* Make the Position column smaller in the input table */
+#playerTable .position-cell {
+    width: 50px;
+    text-align: center;
+    white-space: nowrap;
 }
 
-/* Highlight the "Money Left" row */
-.table-warning {
-    background-color: #fff3cd; !important /* Light yellow */
-    font-weight: bold;
+/* ========================================================================
+   Money Left row
+   ======================================================================== */
+.money-left-row td {
+    padding: 10px !important;
 }
 
+.money-left-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
 
+.money-left-mode {
+    max-width: 70px;
+    flex: 0 0 auto;
+}
 
+.money-left-helper {
+    color: rgba(255,255,255,0.65);
+    font-size: 11px;
+    text-transform: none;
+    min-height: 14px;
+}
 
-
-/* Align Calculate and Settings buttons */
-
+/* ========================================================================
+   Buttons
+   ======================================================================== */
 .button-container {
     display: flex;
     justify-content: space-between;
@@ -71,17 +90,15 @@ tbody td, tr {
     margin-top: 10px;
 }
 
-/* Ensure Bootstrap styles are overridden */
 .btn {
-    box-shadow: none !important; /* Remove Bootstrap button shadow */
-    border-radius: 5px !important; /* Keep a consistent border radius */
+    box-shadow: none !important;
+    border-radius: 5px !important;
 }
 
-/* Calculate Button */
 .btn-primary {
-    background-color: #00cd70 !important; /* Green */
-    color: #1c173d !important; /* Dark Blue */
-    border: 2px solid #00cd70 !important; /* Ensure border is same color */
+    background-color: #00cd70 !important;
+    color: #1c173d !important;
+    border: 2px solid #00cd70 !important;
     font-size: 18px !important;
     padding: 12px !important;
     font-weight: bold !important;
@@ -90,69 +107,95 @@ tbody td, tr {
     transition: background-color 0.3s ease, color 0.3s ease !important;
 }
 
-.btn-success {
-	 background-color: #00cd70 !important; /* Green */
-color: #1c173d !important; /* Dark Blue */}
-
-/* Calculate Button Hover */
 .btn-primary:hover {
-    background-color: #00b862 !important; /* Slightly darker green */
+    background-color: #00b862 !important;
     color: #1c173d !important;
     border-color: #00b862 !important;
 }
 
-/* Settings Button (Gear Icon) */
+.btn-success {
+    background-color: #00cd70 !important;
+    color: #1c173d !important;
+    border-color: #00cd70 !important;
+}
+
+.btn-success:hover {
+    background-color: #00b862 !important;
+    border-color: #00b862 !important;
+}
+
+.btn-outline-light {
+    border-color: rgba(255,255,255,0.4) !important;
+    color: white !important;
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+    color: white !important;
+}
+
 .btn-secondary {
     background-color: transparent !important;
-    color: #00cd70 !important; /* Green text */
-    border: 2px solid #00cd70 !important; /* Green border */
+    color: #00cd70 !important;
+    border: 2px solid #00cd70 !important;
     font-size: 18px !important;
     padding: 12px !important;
     font-weight: bold !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 50px !important; /* Make it square */
+    width: 50px !important;
     height: 50px !important;
     transition: all 0.3s ease !important;
+    flex-shrink: 0;
 }
 
-/* Hover effect for Settings Button */
 .btn-secondary:hover {
     background-color: #00cd70 !important;
-    color: #ffffff !important; /* White text on hover */
+    color: #ffffff !important;
 }
 
-/* Ensure Settings Button Icon Matches Text Color */
 .btn-secondary i {
-    color: #00cd70 !important; /* Green by default */
+    color: #00cd70 !important;
     font-size: 24px !important;
     transition: color 0.3s ease !important;
 }
 
 .btn-secondary:hover i {
-    color: #ffffff !important; /* White icon on hover */
+    color: #ffffff !important;
 }
 
+/* Results-action buttons row */
+.results-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+}
 
-/* Settings Container Styling */
+/* ========================================================================
+   Settings Panel
+   ======================================================================== */
 #settingsContainer {
     display: none;
     width: 100%;
     margin-top: 10px;
     padding: 15px;
-    border: 1px solid #ccc;
+    border: 1px solid rgba(255,255,255,0.2);
     border-radius: 8px;
+    background-color: #272341;
 }
 
-/* Settings Title */
 #settingsContainer h4 {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
+    color: white;
 }
 
-/* Dropdown Styling */
+#settingsContainer .form-label { color: white; }
+
 #roundingSelect {
     width: 100%;
     padding: 8px;
@@ -161,91 +204,96 @@ color: #1c173d !important; /* Dark Blue */}
     background-color: #fff;
 }
 
-/* Checkbox Section */
 .settings-options {
     display: flex;
-    flex-direction: column; /* Stack checkboxes vertically */
-    gap: 5px;
+    flex-direction: column;
+    gap: 8px;
     margin-top: 10px;
 }
 
-/* Checkbox Label Styling */
 .settings-options label {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
     font-size: 14px;
+    color: white;
+    cursor: pointer;
 }
 
-/* Slider Box */
 #sliderContainer {
-    background-color: #f0f0f0; /* Light gray */
-    border: 2px solid #ccc;
+    background-color: #312c52;
+    border: 1px solid rgba(255,255,255,0.2);
     border-radius: 8px;
     padding: 10px;
     text-align: center;
 }
 
-/* Slider Bar */
-#icmChipChopSlider {
-    width: 100%;
-}
+#icmChipChopSlider { width: 100%; }
 
-/* Responsive Text for Slider */
 #sliderContainer label {
     font-size: 14px;
     font-weight: bold;
+    color: white;
 }
 
+/* ========================================================================
+   Results tables
+   ======================================================================== */
+.results-container { width: 100%; max-width: 100%; }
 
+.results-container .table { width: 100%; }
 
-
-/* Ensure results tables are full width */
-.results-container {
-    width: 100%;
-    max-width: 100%;
-}
-
-/* Ensure tables do not shrink */
-.results-container .table {
-    width: 100%;
-    table-layout: fixed;
-}
-
-/* Ensure columns distribute evenly */
 .results-container th,
 .results-container td {
     text-align: center;
-    white-space: nowrap;
     padding: 10px;
     word-wrap: break-word;
 }
 
-/* Keep headers bold and readable */
-.results-container th {
-    font-weight: bold;
-}
+.results-container th { font-weight: bold; }
 
-/* Ensure results tables ignore forced column width */
-.results-container th,
-.results-container td {
-    width: auto !important; /* Allow columns to expand */
-}
-
-/* Make the Position column smaller - ONLY for the Player Input Table */
-#playerTable th:nth-child(3), 
-#playerTable td:nth-child(3) {
-    width: 50px; /* Reduce width */
-    text-align: center; /* Center the text */
-    white-space: nowrap; /* Prevents wrapping */
-}
-
-/* Share Button Styling */
-.share-container {
+/* Editable prize cell — looks like a cell, acts like an input */
+.editable-prize {
+    background-color: transparent;
+    border: 1px dashed rgba(0, 205, 112, 0.4);
+    color: white;
     text-align: center;
-    margin-top: 20px;
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
+.editable-prize:hover {
+    border-color: rgba(0, 205, 112, 0.8);
+    background-color: rgba(0, 205, 112, 0.05);
+}
+
+.editable-prize:focus {
+    outline: none;
+    border-color: #00cd70;
+    background-color: rgba(0, 205, 112, 0.1);
+}
+
+.editable-prize.adjusted {
+    border-color: #ffc107;
+    background-color: rgba(255, 193, 7, 0.08);
+    color: #ffd54f;
+}
+
+.adjusted-indicator {
+    display: inline-block;
+    font-size: 10px;
+    color: #ffc107;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+/* ========================================================================
+   Share / link
+   ======================================================================== */
 #shareableLink {
     display: none;
     width: 100%;
@@ -253,11 +301,87 @@ color: #1c173d !important; /* Dark Blue */}
     text-align: center;
 }
 
-/* Totals row styling */
-.table-dark tfoot td {
-    font-weight: bold;
+/* ========================================================================
+   Mobile: keep the compact table, just tighten spacing and fonts
+   ======================================================================== */
+@media (max-width: 640px) {
+    body { padding: 12px; }
+
+    .button-container {
+        flex-wrap: nowrap;
+    }
+
+    /* Compact input table */
+    #playerInputTable {
+        font-size: 14px;
+    }
+
+    #playerInputTable thead th {
+        font-size: 11px;
+        padding: 8px 4px;
+    }
+
+    #playerInputTable tbody td {
+        padding: 4px 3px !important;
+    }
+
+    #playerInputTable .position-cell {
+        width: 28px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    #playerInputTable tbody td input.form-control {
+        padding: 6px 6px;
+        font-size: 14px;
+        min-width: 0;
+    }
+
+    /* data-label pseudo-labels are for card layout — keep them hidden here */
+    #playerInputTable tbody td::before { content: none; }
+
+    /* Footer rows */
+    #playerInputTable tfoot td {
+        padding: 8px 6px !important;
+        font-size: 12px;
+    }
+
+    .money-left-row td {
+        padding: 8px 6px !important;
+    }
+
+    /* Results tables: tighter padding/fonts */
+    .results-container table th,
+    .results-container table td {
+        padding: 6px 4px;
+        font-size: 13px;
+    }
+
+    .results-container table th {
+        font-size: 11px;
+    }
+
+    .editable-prize {
+        font-size: 13px;
+        padding: 5px 4px;
+    }
+
+    h2.text-center { font-size: 20px; }
+    h3.text-center { font-size: 17px; }
 }
 
-.d-none {
-    display: none !important;
+/* Very small screens */
+@media (max-width: 380px) {
+    body { padding: 8px; }
+
+    #playerInputTable thead th { font-size: 10px; padding: 6px 2px; }
+    #playerInputTable tbody td { padding: 3px 2px !important; }
+    #playerInputTable tbody td input.form-control {
+        padding: 5px 4px;
+        font-size: 13px;
+    }
+    #playerInputTable .position-cell { width: 22px; font-size: 12px; }
+
+    .btn-primary { font-size: 15px !important; padding: 10px !important; }
+    .btn-secondary { width: 44px !important; height: 44px !important; }
 }
