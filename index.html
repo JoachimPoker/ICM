@@ -27,10 +27,10 @@
                 <tbody id="playerTable"></tbody>
                 <tfoot class="table-dark">
                     <tr>
-                        <td data-label="Totals"><strong>Total:</strong></td>
-                        <td data-label="Total Stack" id="totalStack">0</td>
+                        <td><strong>Total:</strong></td>
+                        <td id="totalStack">0</td>
                         <td></td>
-                        <td data-label="Total Payout" id="totalPayout">0</td>
+                        <td id="totalPayout">0</td>
                     </tr>
                     <tr class="money-left-row">
                         <td colspan="2" class="money-left-label">
@@ -40,7 +40,7 @@
                             <div class="money-left-wrapper">
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text money-left-prefix" id="moneyLeftPrefix">£</span>
-                                    <input type="number" id="moneyLeftValue" class="form-control" min="0" value="0" step="any">
+                                    <input type="text" inputmode="decimal" autocomplete="off" id="moneyLeftValue" class="form-control" value="0">
                                     <select id="moneyLeftMode" class="form-select money-left-mode">
                                         <option value="amount" selected>£</option>
                                         <option value="percent">%</option>
@@ -119,10 +119,10 @@
             for (let i = 1; i <= 9; i++) {
                 html += `
                     <tr>
-                        <td data-label="Name"><input type="text" class="form-control player-name" placeholder="Player ${i}"></td>
-                        <td data-label="Chip Count"><input type="number" class="form-control stack" min="0" placeholder="0"></td>
-                        <td data-label="Position" class="position-cell">${i}</td>
-                        <td data-label="Payout (£)"><input type="number" class="form-control payout" min="0" placeholder="0"></td>
+                        <td><input type="text" class="form-control player-name" placeholder="Player ${i}"></td>
+                        <td><input type="text" inputmode="decimal" autocomplete="off" class="form-control stack" placeholder="0"></td>
+                        <td class="position-cell">${i}</td>
+                        <td><input type="text" inputmode="decimal" autocomplete="off" class="form-control payout" placeholder="0"></td>
                     </tr>
                 `;
             }

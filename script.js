@@ -56,6 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
         input.addEventListener('input', onInputChanged);
     });
 
+    // Add thousand separators once the user leaves a field
+    document.querySelectorAll('.stack, .payout, #moneyLeftValue').forEach(input => {
+        input.addEventListener('blur', () => formatInputValue(input));
+    });
+
     // Money Left wiring
     document.getElementById('moneyLeftValue').addEventListener('input', updateMoneyLeftHelper);
     document.getElementById('moneyLeftMode').addEventListener('change', onMoneyLeftModeChange);
@@ -85,6 +90,21 @@ function onInputChanged() {
 
 
 /* ---------- 3. Input / totals helpers ------------------------------------ */
+
+// Number inputs are text fields so they can show thousand separators.
+// parseNum strips the separators back out before any maths.
+function parseNum(str) {
+    return parseFloat(String(str || '').replace(/,/g, ''));
+}
+
+function formatNum(value, minDp = 0, maxDp = 2) {
+    return value.toLocaleString('en-GB', { minimumFractionDigits: minDp, maximumFractionDigits: maxDp });
+}
+
+function formatInputValue(el) {
+    const v = parseNum(el.value);
+    if (!isNaN(v)) el.value = formatNum(v);
+}
 
 function getActivePlayers() {
     // Returns arrays of active players (stack > 0), in entry order.
@@ -131,8 +151,8 @@ function calculateTotals() {
         if (!isNaN(v) && v > 0) totalPayout += v;
     });
 
-    document.getElementById('totalStack').innerText = totalStack.toLocaleString();
-    document.getElementById('totalPayout').innerText = `£${totalPayout.toLocaleString()}`;
+    document.getElementById('totalStack').innerText = formatNum(totalStack);
+    document.getElementById('totalPayout').innerText = `£${formatNum(totalPayout)}`;
 }
 
 
@@ -145,7 +165,7 @@ function getTotalPayout() {
 function getMoneyLeftAmount() {
     // Always returns the £ amount, regardless of input mode.
     const mode = document.getElementById('moneyLeftMode').value;
-    const raw = parseFloat(document.getElementById('moneyLeftValue').value) || 0;
+    const raw = parseNum(document.getElementById('moneyLeftValue').value) || 0;
 
     if (mode === 'percent') {
         const total = getTotalPayout();
@@ -159,14 +179,14 @@ function onMoneyLeftModeChange() {
     const input = document.getElementById('moneyLeftValue');
     const prefix = document.getElementById('moneyLeftPrefix');
     const total = getTotalPayout();
-    const currentVal = parseFloat(input.value) || 0;
+    const currentVal = parseNum(input.value) || 0;
 
     if (mode === 'percent') {
         prefix.textContent = '%';
         // Convert current £ to % of current total (if total > 0)
         if (total > 0 && currentVal > 0) {
             const pct = (currentVal / total) * 100;
-            input.value = Math.round(pct * 100) / 100; // 2 dp
+            input.value = formatNum(Math.round(pct * 100) / 100); // 2 dp
         }
         input.max = 100;
     } else {
@@ -174,7 +194,7 @@ function onMoneyLeftModeChange() {
         // Convert current % to £
         if (total > 0 && currentVal > 0) {
             const amt = (currentVal / 100) * total;
-            input.value = Math.round(amt * 100) / 100;
+            input.value = formatNum(Math.round(amt * 100) / 100);
         }
         input.removeAttribute('max');
     }
@@ -184,7 +204,7 @@ function onMoneyLeftModeChange() {
 function updateMoneyLeftHelper() {
     const mode = document.getElementById('moneyLeftMode').value;
     const helper = document.getElementById('moneyLeftHelper');
-    const raw = parseFloat(document.getElementById('moneyLeftValue').value) || 0;
+    const raw = parseNum(document.getElementById('moneyLeftValue').value) || 0;
     const total = getTotalPayout();
 
     if (raw <= 0 || total <= 0) {
@@ -194,10 +214,10 @@ function updateMoneyLeftHelper() {
 
     if (mode === 'percent') {
         const amt = (raw / 100) * total;
-        helper.textContent = `= £${amt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} of £${total.toLocaleString()}`;
+        helper.textContent = `= £${formatNum(amt, 2, 2)} of £${formatNum(total)}`;
     } else {
         const pct = total > 0 ? (raw / total) * 100 : 0;
-        helper.textContent = `= ${pct.toFixed(2)}% of £${total.toLocaleString()}`;
+        helper.textContent = `= ${pct.toFixed(2)}% of £${formatNum(total)}`;
     }
 }
 
@@ -497,16 +517,17 @@ function renderResultsTable({ containerId, title, tableKey, rawPrizes, adjustmen
         const stackValue = stacks[i] || 0;
         const isAdj = Math.abs(adjustments[i] - 100) > 0.001;
         const val = displayed[i];
-        const formatted = val.toFixed(2);
+        const formatted = formatNum(val, 2, 2);
 
         html += `
             <tr>
                 <td>${escapeHtml(playerName)}</td>
-                <td>${stackValue.toLocaleString()}</td>
+                <td>${formatNum(stackValue)}</td>
                 <td>
                     <input
-                        type="number"
-                        step="any"
+                        type="text"
+                        inputmode="decimal"
+                        autocomplete="off"
                         class="editable-prize ${isAdj ? 'adjusted' : ''}"
                         data-table="${tableKey}"
                         data-index="${i}"
@@ -523,12 +544,12 @@ function renderResultsTable({ containerId, title, tableKey, rawPrizes, adjustmen
                     <tfoot class="table-dark">
                         <tr>
                             <td colspan="2"><strong>Money Left to Be Played For:</strong></td>
-                            <td>£${moneyLeft.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td>£${formatNum(moneyLeft, 2, 2)}</td>
                         </tr>
                         <tr>
                             <td><strong>Total:</strong></td>
-                            <td>${stacks.reduce((s, v) => s + v, 0).toLocaleString()}</td>
-                            <td><strong>£${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></td>
+                            <td>${formatNum(stacks.reduce((s, v) => s + v, 0))}</td>
+                            <td><strong>£${formatNum(total, 2, 2)}</strong></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -556,7 +577,7 @@ function renderResultsTable({ containerId, title, tableKey, rawPrizes, adjustmen
 function onPrizeEdited(inputEl) {
     const tableKey = inputEl.dataset.table;
     const playerIdx = parseInt(inputEl.dataset.index, 10);
-    const newValue = parseFloat(inputEl.value);
+    const newValue = parseNum(inputEl.value);
 
     if (isNaN(newValue) || newValue < 0) {
         renderAllResults(); // revert
@@ -666,19 +687,25 @@ async function shareResults() {
     const payouts = [];
 
     document.querySelectorAll('.player-name').forEach(input => players.push(encodeURIComponent(input.value)));
-    document.querySelectorAll('.stack').forEach(input => stacks.push(input.value));
-    document.querySelectorAll('.payout').forEach(input => payouts.push(input.value));
+    // Strip thousand separators: commas are the list delimiter in the URL
+    document.querySelectorAll('.stack').forEach(input => stacks.push(input.value.replace(/,/g, '')));
+    document.querySelectorAll('.payout').forEach(input => payouts.push(input.value.replace(/,/g, '')));
 
     const queryParams = new URLSearchParams();
     queryParams.set("players", players.join(","));
     queryParams.set("stacks", stacks.join(","));
     queryParams.set("payouts", payouts.join(","));
-    queryParams.set("moneyLeft", document.getElementById('moneyLeftValue').value || 0);
+    queryParams.set("moneyLeft", document.getElementById('moneyLeftValue').value.replace(/,/g, '') || 0);
     queryParams.set("moneyLeftMode", document.getElementById('moneyLeftMode').value);
     queryParams.set("rounding", document.getElementById('roundingSelect').value);
     queryParams.set("icm", document.getElementById('icmChipChopSlider').value);
     queryParams.set("showChop", document.getElementById('showChipChop').checked ? 1 : 0);
     queryParams.set("showMixed", document.getElementById('showMixed').checked ? 1 : 0);
+
+    // Manual adjustments (only when present), full precision so values round-trip exactly
+    if (isAdjusted(icmAdjustments)) queryParams.set("adjIcm", icmAdjustments.join(","));
+    if (isAdjusted(chopAdjustments)) queryParams.set("adjChop", chopAdjustments.join(","));
+    if (isAdjusted(mixedAdjustments)) queryParams.set("adjMixed", mixedAdjustments.join(","));
 
     const shareableURL = window.location.origin + window.location.pathname + "?" + queryParams.toString();
 
@@ -733,15 +760,16 @@ function loadSharedData() {
     const params = new URLSearchParams(window.location.search);
     if (!params.has("players")) return;
 
-    const players = params.get("players").split(",");
-    const stacks = params.get("stacks").split(",");
-    const payouts = params.get("payouts").split(",");
+    const players = (params.get("players") || "").split(",");
+    const stacks = (params.get("stacks") || "").split(",");
+    const payouts = (params.get("payouts") || "").split(",");
 
     document.querySelectorAll('.player-name').forEach((input, i) => input.value = decodeURIComponent(players[i] || ""));
     document.querySelectorAll('.stack').forEach((input, i) => input.value = stacks[i] || "");
     document.querySelectorAll('.payout').forEach((input, i) => input.value = payouts[i] || "");
 
     document.getElementById('moneyLeftValue').value = params.get("moneyLeft") || 0;
+    document.querySelectorAll('.stack, .payout, #moneyLeftValue').forEach(formatInputValue);
     const mlMode = params.get("moneyLeftMode") || 'amount';
     document.getElementById('moneyLeftMode').value = mlMode;
     document.getElementById('moneyLeftPrefix').textContent = mlMode === 'percent' ? '%' : '£';
@@ -758,5 +786,21 @@ function loadSharedData() {
     updateSliderLabel();
     calculateTotals();
     updateMoneyLeftHelper();
+
+    // Nothing to calculate if the link carries no stacks
+    if (getActivePlayers().stacks.length === 0) return;
     calculateAll();
+
+    // Restore manual adjustments (calculateAll resets them)
+    const n = rawICMPrizes.length;
+    const parseAdj = key => {
+        const raw = params.get(key);
+        if (!raw) return null;
+        const vals = raw.split(",").map(Number);
+        return vals.length === n && vals.every(v => isFinite(v) && v > 0) ? vals : null;
+    };
+    icmAdjustments = parseAdj("adjIcm") || icmAdjustments;
+    chopAdjustments = parseAdj("adjChop") || chopAdjustments;
+    mixedAdjustments = parseAdj("adjMixed") || mixedAdjustments;
+    renderAllResults();
 }

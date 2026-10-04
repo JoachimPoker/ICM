@@ -7,36 +7,10 @@ body {
     color: white !important;
 }
 
-@media (max-width: 576px) {
-    body { padding: 12px; }
-}
-
 /* ========================================================================
    Tables
    ======================================================================== */
-thead th, tr {
-    background-color: #272341 !important;
-    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-    border-left: none !important;
-    border-right: none !important;
-    border-top: none !important;
-    text-transform: uppercase;
-    color: white !important;
-    vertical-align: middle;
-}
-
-tfoot td, tr {
-    background-color: #272341 !important;
-    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-    border-left: none !important;
-    border-right: none !important;
-    border-top: none !important;
-    text-transform: uppercase;
-    color: white !important;
-    vertical-align: middle;
-}
-
-tbody td, tr {
+thead th, tfoot td, tbody td, tr {
     background-color: #312c52 !important;
     border-bottom: 1px solid rgba(255,255,255,0.1) !important;
     border-left: none !important;
@@ -45,6 +19,10 @@ tbody td, tr {
     text-transform: uppercase;
     color: white !important;
     vertical-align: middle;
+}
+
+thead th, tfoot td {
+    background-color: #272341 !important;
 }
 
 /* Make the Position column smaller in the input table */
@@ -292,24 +270,10 @@ tbody td, tr {
 }
 
 /* ========================================================================
-   Share / link
-   ======================================================================== */
-#shareableLink {
-    display: none;
-    width: 100%;
-    margin-top: 10px;
-    text-align: center;
-}
-
-/* ========================================================================
    Mobile: keep the compact table, just tighten spacing and fonts
    ======================================================================== */
 @media (max-width: 640px) {
     body { padding: 12px; }
-
-    .button-container {
-        flex-wrap: nowrap;
-    }
 
     /* Compact input table */
     #playerInputTable {
@@ -336,9 +300,6 @@ tbody td, tr {
         font-size: 14px;
         min-width: 0;
     }
-
-    /* data-label pseudo-labels are for card layout — keep them hidden here */
-    #playerInputTable tbody td::before { content: none; }
 
     /* Footer rows */
     #playerInputTable tfoot td {
